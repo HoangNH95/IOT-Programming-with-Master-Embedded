@@ -1,2 +1,6 @@
-#Rev 1: IOT-Programming-with-Master-Embedded
-Courseware include: C advance and embedded programming
+#Rev 1:
+- Feature basic
+
+#Rev 2:
+- Add responses from device
+- Add chart parameter

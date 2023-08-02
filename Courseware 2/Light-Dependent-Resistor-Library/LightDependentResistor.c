@@ -7,7 +7,7 @@
  *
  * Description: Get light intensity value (Lux & FootCandles) from Light dependent Resistor (implementation)
  *
- * Author: HoangNH
+ * Author: Quentin Comte-Gaz
  *
  * Last Changed By:  $Author: HoangNH $
  * Revision:         $Revision: 1.0 $
@@ -49,46 +49,46 @@ float _smoothing_history_values[100]; //!< (smoothing only) All valid values (in
 
 void LDR_init(ePhotoCellDeviceType typeDevice)
 {
-	_photocell_on_ground = false;
-	_smoothing_history_size = SMOOTHING_HISTORY_SIZE;
+    _photocell_on_ground = false;
+    _smoothing_history_size = SMOOTHING_HISTORY_SIZE;
 
-	switch (typeDevice)
-	{
-		case GL5516:
-			_mult_value = 29634400;
-			_pow_value = 1.6689;
-			break;
-		case GL5537_1:
-			_mult_value = 32435800;
-			_pow_value = 1.4899;
-			break;
-		case GL5537_2:
-			_mult_value = 2801820;
-			_pow_value = 1.1772;
-			break;
-		case GL5539:
-			_mult_value = 208510000;
-			_pow_value = 1.4850;
-			break;
-		case GL5549:
-			_mult_value = 44682100;
-			_pow_value = 1.2750;
-			break;
-		case GL5528:
-		default:
-			_mult_value = 32017200;
-			_pow_value = 1.5832;
-	}
+    switch (typeDevice)
+    {
+        case GL5516:
+            _mult_value = 29634400;
+            _pow_value = 1.6689;
+            break;
+        case GL5537_1:
+            _mult_value = 32435800;
+            _pow_value = 1.4899;
+            break;
+        case GL5537_2:
+            _mult_value = 2801820;
+            _pow_value = 1.1772;
+            break;
+        case GL5539:
+            _mult_value = 208510000;
+            _pow_value = 1.4850;
+            break;
+        case GL5549:
+            _mult_value = 44682100;
+            _pow_value = 1.2750;
+            break;
+        case GL5528:
+        default:
+            _mult_value = 32017200;
+            _pow_value = 1.5832;
+    }
 
-	if (_smoothing_history_size > (sizeof(_smoothing_history_values) / sizeof(_smoothing_history_values[0]))) {
-		_smoothing_history_size = (sizeof(_smoothing_history_values) / sizeof(_smoothing_history_values[0]));
-	}
+    if (_smoothing_history_size > (sizeof(_smoothing_history_values) / sizeof(_smoothing_history_values[0]))) {
+        _smoothing_history_size = (sizeof(_smoothing_history_values) / sizeof(_smoothing_history_values[0]));
+    }
 
-	for (uint32_t i = 0 ; i < _smoothing_history_size; i++)
-	{
-		// We initialize the values as impossible value (lux can't be negative)
-		_smoothing_history_values[i] = -1.0f;
-	}
+    for (uint32_t i = 0 ; i < _smoothing_history_size; i++)
+    {
+        // We initialize the values as impossible value (lux can't be negative)
+        _smoothing_history_values[i] = -1.0f;
+    }
 }
 
 void LDR_setPhotocellPositionOnGround(bool on_ground)
@@ -162,34 +162,34 @@ float LDR_getSmoothedLux(uint16_t rawAnalogValue)
             _smoothing_history_values[_smoothing_history_next] = LDR_getCurrentLux(rawAnalogValue);
             _smoothing_sum += _smoothing_history_values[_smoothing_history_next];
 
-			if (_smoothing_history_next < _smoothing_history_size - 1)
-			{
-				// Still not all buffers filled
-				_smoothing_history_next++;
-				sumResult = _smoothing_sum / _smoothing_history_next;
-			}
-			else
-			{
-				// All buffers filled now, start regular operation
-				_smoothing_history_next = 0;
-			    sumResult =  _smoothing_sum / _smoothing_history_size;
-			}
-		}
+            if (_smoothing_history_next < _smoothing_history_size - 1)
+            {
+                // Still not all buffers filled
+                _smoothing_history_next++;
+                sumResult = _smoothing_sum / _smoothing_history_next;
+            }
+            else
+            {
+                // All buffers filled now, start regular operation
+                _smoothing_history_next = 0;
+                sumResult =  _smoothing_sum / _smoothing_history_size;
+            }
+        }
 		else
 		{
-			// Smoothing enabled and buffer filled previously.
-			// => Regular operation from now on:
+            // Smoothing enabled and buffer filled previously.
+            // => Regular operation from now on:
 
-			// Replace previous value by the new one (from buffer and sum)
-			_smoothing_sum -= _smoothing_history_values[_smoothing_history_next];
-			_smoothing_history_values[_smoothing_history_next] = LDR_getCurrentLux(rawAnalogValue);
-			_smoothing_sum += _smoothing_history_values[_smoothing_history_next];
+            // Replace previous value by the new one (from buffer and sum)
+            _smoothing_sum -= _smoothing_history_values[_smoothing_history_next];
+            _smoothing_history_values[_smoothing_history_next] = LDR_getCurrentLux(rawAnalogValue);
+            _smoothing_sum += _smoothing_history_values[_smoothing_history_next];
 
-			// Update next value tu acquire
-			_smoothing_history_next = (_smoothing_history_next < _smoothing_history_size - 1) ? _smoothing_history_next + 1 : 0;
+            // Update next value tu acquire
+            _smoothing_history_next = (_smoothing_history_next < _smoothing_history_size - 1) ? _smoothing_history_next + 1 : 0;
 
-			sumResult = _smoothing_sum / _smoothing_history_size;
-		}
+            sumResult = _smoothing_sum / _smoothing_history_size;
+        }
     }
 
     return sumResult;

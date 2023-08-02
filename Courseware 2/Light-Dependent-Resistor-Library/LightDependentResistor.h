@@ -24,7 +24,7 @@
  *       It is possible to exchange the position of the photocell and the other resistor
  *       but you will have to call \p setPhotocellPositionOnGround(false).
  *
- * Author: HoangNH
+ * Author: Quentin Comte-Gaz
  *
  * Last Changed By:  $Author: HoangNH $
  * Revision:         $Revision: 1.0 $

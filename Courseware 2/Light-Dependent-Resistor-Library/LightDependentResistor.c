@@ -175,8 +175,8 @@ float LDR_getSmoothedLux(uint16_t rawAnalogValue)
                 sumResult =  _smoothing_sum / _smoothing_history_size;
             }
         }
-		else
-		{
+        else
+        {
             // Smoothing enabled and buffer filled previously.
             // => Regular operation from now on:
 
